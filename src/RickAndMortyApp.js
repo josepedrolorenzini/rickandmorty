@@ -3,10 +3,11 @@ import SearchForm from "./SearchForm"
 import { useState } from "react";
 import SearchResults from "./SearchResults";
 
+
 function RickAndMortyApp() {
 
     const [query, setQuery] = useState('');
-    
+
     function performSearch(queryText){
         console.log(`in rickandmortyapp::performSearch()` , queryText)
         setQuery(queryText)
@@ -31,6 +32,7 @@ function RickAndMortyApp() {
     {/* so tht the child csn pss the search 
     text from the form back uo the tree to the parent */}
     <SearchForm  onSearchSubmit={performSearch}  />
+   
 
     {output}
     </>

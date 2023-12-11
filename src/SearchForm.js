@@ -3,7 +3,7 @@ import { Axios } from "axios";
 
 function SearchForm(props) {
      // Generate an array of 20 numbers (e.g., [1, 2, 3, ..., 20])
-  const optionsArray = Array.from({ length: 20 }, (_, index) => index + 1);
+  const optionsArray = Array.from({ length: 42 }, (_, index) => index + 1);
   const [pageNumber , setpageNumber] = useState('') ;
   const [filterTerm, setFilterTerm]  = useState('');
  

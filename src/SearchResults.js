@@ -1,5 +1,7 @@
 import { useState , useEffect } from "react";
 import axios from 'axios';
+import CharactersDetails from "./CharactersDetails";
+
 
 const RICKANDMORTY_BASE_URL = 'https://rickandmortyapi.com/api/character';
 //const RICKANDMORTY_API_KEY  = '2f5ac274ecfac5a455f38745704ad084';
@@ -8,17 +10,21 @@ const RICKANDMORTY_BASE_URL = 'https://rickandmortyapi.com/api/character';
 
 function SearchResults(props) {
 
-    const [ data, setData ]     = useState( [] );
-    const [ loading, setLoading ] = useState( true );
-    const [ error, setError ]     = useState( null );
+    const [ data, setData ]                 = useState( [] );
+    const [ loading, setLoading ]           = useState( true );
+    const [ error, setError ]               = useState( null );
+    const [searchItem, setSearchItem]       = useState('')
+    const [filteredUsers, setFilteredUsers] = useState([])
+    const [character , setCharacter]   = useState({})
     
 
     useEffect(() => {
+        
         loadSearchResults(props.searchText)
     }, [props.searchText])//second empty arg means 'run once on mount'
 
 
-    function loadSearchResults(query){
+    function loadSearchResults(query =1 ){
 
         console.log('loadsearchResult()' , query)
 
@@ -43,31 +49,46 @@ function SearchResults(props) {
 
 
     function newAxiosRequest(e){
-        console.log(e.target.id)
+        console.log(e.target)
         axios.get(`https://rickandmortyapi.com/api/character/${e.target.id}`)
-        .then(response =>  console.log(response.data))
+        .then(response => 
+            { console.log(response.data)
+             setCharacter(response.data)}
+             )
         .catch(err => console.warn(err))
     }
 
     function handleFilter(e){
-        const userInput = e.target.value;
-         console.log(userInput)
+        const searchTerm = e.target.value;
+         console.log(searchTerm)
+        
+        setSearchItem(searchTerm);
          let filtersNames = data.filter(character => 
-            console.log(character.name ) 
+            character.name.toLowerCase().includes(searchTerm.toLowerCase())
 
          )
-         console.log(filtersNames)
+        //  setData(filtersNames)
+        //  console.log(filtersNames)
+        setFilteredUsers(filtersNames)
       }
 
 
  if(error){return <b>there is an error loading your page or character</b>}
+ 
+ let displayList = data;
+
+ if(searchItem.length > 0 ){
+   displayList = filteredUsers;
+ }
+
   return (
     <div>
           <form id="FilterSearch">
         <input 
         type="text" 
+        value={searchItem}
         onChange={handleFilter} 
-        placeholder="add number 1 from 1 to 42"></input>
+        placeholder="filter by name"></input>
         <button>filter</button>
     </form>
       <p>results {props.searchText}</p> 
@@ -77,7 +98,7 @@ function SearchResults(props) {
             ? <p>loading ........</p>
             :  <>
             <ul className="ulListRickAndMorty" style={{ listStyleType: 'none' }}>
-              {data.map(e => (
+              {displayList.map(e => (
                 <div key={e.id} className="containerChar">
                   <li>
                     <p>{e.name}</p>
@@ -95,7 +116,7 @@ function SearchResults(props) {
         
           </>
         }
-        
+       { character && <CharactersDetails  character={character}  />}
         </div>
   )
 }
