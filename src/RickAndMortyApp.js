@@ -21,7 +21,7 @@ function RickAndMortyApp() {
     // }
 
     let output  = query.length > 0 
-    ?  <SearchResults searchText={query} />
+    ?  <SearchResults searchText={query} /> //searchresult
     : <p> Please enter a search</p>
 
   return (
